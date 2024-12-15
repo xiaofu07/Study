@@ -13,7 +13,6 @@ import java.io.IOException;
 
 public class TxtWin extends JFrame {
     private String title = "记事本";// 标题
-    private Color groundColor = Color.white;
     private int width = 800;// 宽
     private int height = 600;// 高
 
@@ -29,9 +28,9 @@ public class TxtWin extends JFrame {
     // 工具栏选项
     static JToolBar toolBar = new JToolBar();
 
-    //
-    private JTextArea jta = new JTextArea(); // Create a JTextArea
-    private JScrollPane jsp = new JScrollPane(jta); // Wrap JTextArea in a JScrollPane for scrolling
+    // 文本框
+    private JTextArea jta = new JTextArea();
+    private JScrollPane jsp = new JScrollPane(jta);
 
     // 菜单添加
     private void addMenuBar() {
@@ -44,6 +43,12 @@ public class TxtWin extends JFrame {
         fgMenu.addSeparator();
         fgMenu.add(menuItemQuit);
         menuBar.add(fgMenu);
+        // 添加监听
+        menuItemNew.addActionListener(e -> newFileAction());
+        menuItemOpen.addActionListener(e -> openFileAction());
+        menuItemSave.addActionListener(e -> saveFileAction());
+        menuItemFont.addActionListener(e -> changeFontAndColor());
+        menuItemQuit.addActionListener(e -> dispose());
     }
 
     // 工具栏添加
@@ -70,20 +75,21 @@ public class TxtWin extends JFrame {
 
     // 文本框添加
     private void addTextArea() {
-        jta.setLineWrap(true); // Enable line wrapping
-        jta.setWrapStyleWord(true); // Wrap at word boundaries
-        jta.setFont(new Font("楷体", Font.PLAIN, 16)); // Set font
-        jta.setBackground(Color.YELLOW); // Set background color
+        jta.setLineWrap(true);
+        jta.setWrapStyleWord(true);
+        jta.setFont(new Font("楷体", Font.PLAIN, 16));
+        jta.setBackground(Color.white);
 
-        // Add the JScrollPane (which contains JTextArea) to the JFrame
         this.add(jsp, BorderLayout.CENTER);
     }
 
     // 监听
+    // 新建
     private void newFileAction() {
-        jta.setText(""); // Clear the text area for a new file
+        jta.setText("");
     }
 
+    // 打开
     private void openFileAction() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
@@ -93,9 +99,9 @@ public class TxtWin extends JFrame {
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n"); // Append each line to the StringBuilder
+                    sb.append(line).append("\n");
                 }
-                jta.setText(sb.toString()); // Set the text area content
+                jta.setText(sb.toString());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error opening file: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -103,13 +109,14 @@ public class TxtWin extends JFrame {
         }
     }
 
+    // 保存
     private void saveFileAction() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showSaveDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                writer.write(jta.getText()); // Write text from JTextArea to the file
+                writer.write(jta.getText());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -117,16 +124,35 @@ public class TxtWin extends JFrame {
         }
     }
 
+    // 字体与颜色
+    private void changeFontAndColor() {
+
+        // 字体选择
+        Font newFont = FontChooser.showDialog(this, "选择字体", jta.getFont());
+        if (newFont != null)
+            jta.setFont(newFont);
+
+        // 颜色选择
+        Color newColor = JColorChooser.showDialog(this, "选择颜色", jta.getForeground());
+        if (newColor != null)
+            jta.setForeground(newColor);
+
+    }
+
+    // 退出
+    private void quitFileAction(){
+        
+    }
     // 启动窗口
     public void launch() {
-        
+
         // 菜单添加
         addMenuBar();
         // 工具栏添加
         addToolBar();
         // 文本框添加
         addTextArea();
-        
+
         // 窗口是否可见
         this.setVisible(true);
         // 窗口大小
@@ -139,5 +165,4 @@ public class TxtWin extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-
 }
