@@ -13,6 +13,8 @@ public class FgButton extends JButton {
     public FgButton(Icon icon, String strToolTipText) {
         super(icon);
         setToolTipText(strToolTipText);
+        setActionCommand(strToolTipText);
+
     }
 
     public FgButton(String text) {
@@ -22,5 +24,6 @@ public class FgButton extends JButton {
     public FgButton(String text, Icon icon, String strToolTipText) {
         super(text, icon);
         setToolTipText(strToolTipText);
+        setActionCommand(strToolTipText);
     }
 }
