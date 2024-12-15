@@ -1,8 +1,6 @@
 import javax.swing.*;
-import javax.swing.event.AncestorListener;
 
 import java.awt.*;
-import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,7 +46,7 @@ public class TxtWin extends JFrame {
         menuItemOpen.addActionListener(e -> openFileAction());
         menuItemSave.addActionListener(e -> saveFileAction());
         menuItemFont.addActionListener(e -> changeFontAndColor());
-        menuItemQuit.addActionListener(e -> dispose());
+        menuItemQuit.addActionListener(e -> quitFileAction());
     }
 
     // 工具栏添加
@@ -140,9 +138,17 @@ public class TxtWin extends JFrame {
     }
 
     // 退出
-    private void quitFileAction(){
-        
+    private void quitFileAction() {
+        int choice = JOptionPane.showConfirmDialog(this, "是否保存当前更改？", "退出", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            saveFileAction(); // 先保存文件
+            System.exit(0); // 退出程序
+        } else if (choice == JOptionPane.NO_OPTION) {
+            System.exit(0); // 直接退出程序
+        }
+        // 取消操作则什么都不做
     }
+
     // 启动窗口
     public void launch() {
 
